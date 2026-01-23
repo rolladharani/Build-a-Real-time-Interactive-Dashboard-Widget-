@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "3000:80"
+    depends_on:
+      - mock-api
+
+  mock-api:
+    build: ./mock-server
+    ports:
+      - "8080:8080"
