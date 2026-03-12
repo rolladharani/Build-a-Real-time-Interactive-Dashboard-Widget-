@@ -68,6 +68,9 @@ realtime-dashboard
 
 ## Screenshots
 
+### Desktop View
+![Desktop Dashboard](./screenshots/dashboard-desktop.png)
+
 ### Mobile View
 ![Mobile Dashboard](./screenshots/dashboard-mobile.png)
 
@@ -83,7 +86,7 @@ realtime-dashboard
 
 A demo video showcasing the dashboard functionality is included in the repository.
 
-Video Link: https://drive.google.com/file/d/1GGRGSxd_luk52uwcTdbaR1s47jDLUOiC/view
+Video Link: https://drive.google.com/file/d/1z5Ytfr1qZxhnLdByaWHv5U3NLB1UawHl/view?usp=sharing
 
 ---
 
