@@ -3,6 +3,7 @@ import { createActor } from "xstate";
 import { dashboardMachine } from "./DashboardWidget.machine";
 
 describe("DashboardWidget State Machine", () => {
+
   it("should start with empty items", () => {
     const actor = createActor(dashboardMachine).start();
 
@@ -24,6 +25,7 @@ describe("DashboardWidget State Machine", () => {
     actor.send(mockEvent);
 
     const items = actor.getSnapshot().context.items;
+
     expect(items.length).toBe(1);
     expect(items[0].value).toBe(42);
   });
@@ -42,7 +44,52 @@ describe("DashboardWidget State Machine", () => {
     });
 
     const items = actor.getSnapshot().context.items;
+
     expect(items.length).toBe(2);
     expect(items[1].severity).toBe("high");
   });
+
+  it("should update filters when APPLY_FILTER event is sent", () => {
+    const actor = createActor(dashboardMachine).start();
+
+    actor.send({ type: "API_CONNECTED" });
+
+    actor.send({
+      type: "APPLY_FILTER",
+      typeFilter: "log",
+      severityFilter: "high",
+    });
+
+    const context = actor.getSnapshot().context;
+
+    expect(context.typeFilter).toBe("log");
+    expect(context.severityFilter).toBe("high");
+  });
+
+  it("should update sort order when SORT_DATA event is sent", () => {
+    const actor = createActor(dashboardMachine).start();
+
+    actor.send({ type: "API_CONNECTED" });
+
+    actor.send({
+      type: "SORT_DATA",
+      sortOrder: "asc",
+    });
+
+    const context = actor.getSnapshot().context;
+
+    expect(context.sortOrder).toBe("asc");
+  });
+
+  it("should transition to error state on API_ERROR", () => {
+    const actor = createActor(dashboardMachine).start();
+
+    actor.send({
+      type: "API_ERROR",
+      error: "connection failed",
+    });
+
+    expect(actor.getSnapshot().value).toBe("error");
+  });
+
 });

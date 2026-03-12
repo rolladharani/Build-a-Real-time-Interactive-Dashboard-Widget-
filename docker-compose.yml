@@ -1,12 +1,15 @@
 version: "3.8"
 
 services:
+
   frontend:
     build: .
     ports:
       - "3000:80"
     depends_on:
       - mock-api
+    environment:
+      - VITE_REALTIME_API_URL=ws://mock-api:8080
 
   mock-api:
     build: ./mock-server

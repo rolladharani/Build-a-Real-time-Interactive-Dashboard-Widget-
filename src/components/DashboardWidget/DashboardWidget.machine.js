@@ -3,74 +3,68 @@ import { createMachine, assign } from "xstate";
 export const dashboardMachine = createMachine({
   id: "dashboard",
 
-  initial: "idle",
+  initial: "connecting",
 
   context: {
     items: [],
-    error: null,
+    typeFilter: "all",
+    severityFilter: "all",
+    sortOrder: "desc",
+    error: null
   },
 
   states: {
-    /* =====================
-       IDLE STATE
-       ===================== */
-    idle: {
+    connecting: {
       on: {
-        DATA_RECEIVED: {
-          actions: assign({
-            items: (context, event) => {
-              if (!event?.data) return context.items;
-              return [...context.items, event.data];
-            },
-          }),
+        API_CONNECTED: {
+          target: "idle"
         },
 
-        APPLY_FILTER: "filtering",
-        SORT_DATA: "sorting",
+        DATA_RECEIVED: {
+          target: "idle",
+          actions: assign({
+            items: ({ context, event }) => [
+              ...(context.items || []),
+              event.data
+            ]
+          })
+        },
 
         API_ERROR: {
           target: "error",
           actions: assign({
-            error: (_, event) => event?.error || "Unknown error",
-          }),
-        },
-      },
+            error: ({ event }) => event.error
+          })
+        }
+      }
     },
 
-    /* =====================
-       FILTERING STATE
-       ===================== */
-    filtering: {
-      after: {
-        0: "idle",
-      },
-    },
-
-    /* =====================
-       SORTING STATE
-       ===================== */
-    sorting: {
-      after: {
-        0: "idle",
-      },
-    },
-
-    /* =====================
-       ERROR STATE
-       ===================== */
-    error: {
+    idle: {
       on: {
         DATA_RECEIVED: {
-          target: "idle",
           actions: assign({
-            items: (context, event) => {
-              if (!event?.data) return context.items;
-              return [...context.items, event.data];
-            },
-            error: () => null,
-          }),
+            items: ({ context, event }) => [
+              ...(context.items || []),
+              event.data
+            ]
+          })
         },
-      },
+
+        APPLY_FILTER: {
+          actions: assign({
+            typeFilter: ({ event }) => event.typeFilter,
+            severityFilter: ({ event }) => event.severityFilter
+          })
+        },
+
+        SORT_DATA: {
+          actions: assign({
+            sortOrder: ({ event }) => event.sortOrder
+          })
+        }
+      }
     },
-  },
+
+    error: {}
+  }
 });

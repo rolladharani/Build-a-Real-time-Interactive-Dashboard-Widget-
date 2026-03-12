@@ -1,170 +1,72 @@
 # Real-Time Interactive Dashboard Widget
 
-##  Project Overview
+## Project Overview
 
-This project is a **Real-Time Interactive Dashboard Widget** built using **React + Vite**, designed to consume live data from a **WebSocket-based mock API**, manage complex UI behavior using a **state machine (XState)**, and ensure reliability through **end-to-end testing (Cypress)**. The application is fully **Dockerized**, **accessible**, **responsive**, and optimized for **performance**.
+This project implements a **real-time dashboard** that receives live events from a WebSocket server and displays them dynamically. The dashboard allows users to filter and sort incoming data while maintaining predictable UI behavior using a **state machine (XState)**.
 
-The dashboard displays continuously updating events and allows users to **filter** data dynamically while maintaining predictable state transitions.
-
----
-
-##  Tech Stack
-
-* **Frontend:** React, Vite
-* **State Management:** XState
-* **Real-Time Communication:** WebSocket
-* **Styling:** CSS Modules
-* **Testing:** Cypress (E2E), Vitest (unit tests)
-* **Containerization:** Docker, Docker Compose
-* **Accessibility:** ARIA attributes, keyboard navigation
+The application demonstrates real-time data handling, UI state management, Docker-based deployment, and automated testing.
 
 ---
 
-##  Features
+## Key Features
 
-*  Real-time event streaming via WebSocket
-*  Explicit state management using XState
-*  Dynamic filtering by **type** and **severity**
-*  Debounced inputs for performance optimization
-*  Keyboard-accessible UI with ARIA labels
-*  Fully responsive (375px → 1920px)
-*  5+ Cypress end-to-end tests
-*  Dockerized frontend + mock API
+* Real-time event streaming via **WebSocket**
+* UI state management using **XState state machine**
+* Dynamic filtering by:
+
+  * Event type
+  * Severity
+* Sorting events by value (ascending / descending)
+* Responsive and accessible UI
+* Error handling for WebSocket failures
+* Dockerized deployment using **Docker Compose**
+* Unit testing with **Vitest**
+* End-to-end testing with **Cypress**
 
 ---
 
-##  Project Structure
+## Tech Stack
+
+* React
+* XState
+* WebSocket
+* Docker
+* Cypress
+* Vitest
+* CSS Modules
+
+---
+
+## Project Structure
 
 ```
-realtime-dashboard/
-├── src/
-│   ├── components/
-│   │   └── DashboardWidget/
-│   │       ├── DashboardWidget.jsx
-│   │       ├── DashboardWidget.module.css
-│   │       ├── DashboardWidget.machine.js
-│   │       └── DashboardWidget.test.js
-│   ├── api/
+realtime-dashboard
+├── src
+│   ├── api
 │   │   └── realtimeService.js
-│   ├── utils/
-│   │   └── dataUtils.js
-│   └── main.jsx
-├── cypress/
-│   └── e2e/
+│   ├── components
+│   │   └── DashboardWidget
+│   │       ├── DashboardWidget.jsx
+│   │       ├── DashboardWidget.machine.js
+│   │       ├── DashboardWidget.module.css
+│   │       └── DashboardWidget.test.js
+│
+├── mock-server
+│   └── server.js
+│
+├── cypress
+│   └── e2e
 │       └── dashboard.cy.js
-├── mock-server/
-│   ├── server.js
-│   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml
+│
 ├── Dockerfile
-├── .env
+├── docker-compose.yml
 ├── .env.example
-├── README.md
-└── vite.config.js
+└── README.md
 ```
 
 ---
 
-##  Environment Variables
-
-### `.env.example`
-
-```env
-VITE_REALTIME_API_URL=ws://localhost:8080
-```
-
-### `.env`
-
-```env
-VITE_REALTIME_API_URL=ws://localhost:8080
-```
-
-> `.env` is used locally. `.env.example` documents required variables and is committed to Git.
-
----
-
-##  Running the Project (Docker)
-
-### Prerequisites
-
-* Docker Desktop installed
-* Ports **3000** and **8080** free
-
-### Start Application
-
-```bash
-docker-compose up --build
-```
-
-* Frontend → [http://localhost:3000](http://localhost:3000)
-* Mock WebSocket API → ws://localhost:8080
-
----
-
-##  Running Tests
-
-### Cypress (E2E Tests)
-
-```bash
-npx cypress open
-```
-
-Select:
-
-* E2E Testing
-* `dashboard.cy.js`
-
-### Unit Tests
-
-```bash
-npm test
-```
-
----
-
-##  State Machine Architecture
-
-The dashboard uses **XState** to explicitly manage UI behavior.
-
-### States
-
-* `idle`
-* `loading`
-* `error`
-
-### Events
-
-* `DATA_RECEIVED`
-* `API_ERROR`
-
-All real-time updates are funneled through the state machine, ensuring **predictable and testable behavior**.
-
----
-
-##  Accessibility
-
-* Semantic HTML
-* ARIA labels on all interactive elements
-* Keyboard navigable lists and dropdowns
-* Screen-reader friendly live regions
-
-✔ Passes accessibility checks with no critical issues
-
----
-
-##  Performance Optimizations
-
-* Debounced filter inputs (`lodash.debounce`)
-* `useMemo` for filtered data
-* Minimal re-renders during real-time updates
-
----
-
-##  Screenshots
-
-### Desktop View
-![Desktop Dashboard](./screenshots/dashboard-desktop.png)
+## Screenshots
 
 ### Mobile View
 ![Mobile Dashboard](./screenshots/dashboard-mobile.png)
@@ -179,13 +81,133 @@ All real-time updates are funneled through the state machine, ensuring **predict
 
 ##  Demo Video
 
-> https://drive.google.com/file/d/1GGRGSxd_luk52uwcTdbaR1s47jDLUOiC/view
+A demo video showcasing the dashboard functionality is included in the repository.
 
-**Demonstrates:**
-- Real-time dashboard updates
-- Filtering by type and severity
-- Responsive UI (mobile & desktop)
-- Cypress end-to-end tests passing
+Video Link: https://drive.google.com/file/d/1GGRGSxd_luk52uwcTdbaR1s47jDLUOiC/view
+
+---
+
+## Running the Project
+
+### Option 1: Run with Docker 
+
+```
+docker-compose up --build
+```
+
+Then open the application in your browser:
+
+```
+http://localhost:3000
+```
+
+---
+
+### Option 2: Run Locally
+
+Install dependencies:
+
+```
+npm install
+```
+
+Start the frontend:
+
+```
+npm run dev
+```
+
+Start the mock server:
+
+```
+node mock-server/server.js
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file using the example below:
+
+```
+VITE_REALTIME_API_URL=ws://localhost:8080
+```
+
+When running with Docker, the variable is provided via `docker-compose.yml`.
+
+---
+
+## Running Tests
+
+### Unit Tests (Vitest)
+
+```
+npm test
+```
+
+---
+
+### End-to-End Tests (Cypress)
+
+Start the application first, then run:
+
+```
+npx cypress open
+```
+
+Select:
+
+```
+dashboard.cy.js
+```
+
+---
+
+## State Machine Logic
+
+The dashboard uses **XState** to manage UI behavior:
+
+States include:
+
+* connecting
+* idle
+* error
+
+Events handled by the machine:
+
+* API_CONNECTED
+* DATA_RECEIVED
+* APPLY_FILTER
+* SORT_DATA
+* API_ERROR
+
+This ensures predictable behavior for real-time updates and UI interactions.
+
+---
+
+## Accessibility
+
+The dashboard includes accessibility improvements:
+
+* Keyboard accessible controls
+* ARIA labels for filters
+* Semantic HTML structure
+
+---
+
+## Docker Setup
+
+The project includes:
+
+* Multi-stage Docker build for the frontend
+* Docker container for the mock WebSocket API
+* Docker Compose orchestration
+
+Start both services using:
+
+```
+docker-compose up --build
+```
 
 ---
 
